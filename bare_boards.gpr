@@ -1,0 +1,41 @@
+with "config/bare_boards_config.gpr";
+project Bare_Boards is
+
+   for Target use "arm-eabi";
+   for Runtime ("Ada") use "light-tasking-" & Bare_Boards_Config.Board;
+
+   Src_Dirs := ();
+   case Bare_Boards_Config.Board is
+      when "stm32f746disco" =>
+         Src_Dirs := Src_Dirs & ("src/stm32/stm32f746disco");
+      when "stm32f429disco" =>
+         Src_Dirs := Src_Dirs & ("src/stm32/stm32f429disco");
+   end case;
+
+   for Source_Dirs use ("src/", "config/") & Src_Dirs;
+
+   for Library_Name use "_" & Bare_Boards_Config.Board;
+   for Library_Version use Project'Library_Name & ".so." & Bare_Boards_Config.Crate_Version;
+
+   for Object_Dir use "obj/" & Bare_Boards_Config.Build_Profile;
+   for Create_Missing_Dirs use "True";
+   for Library_Dir use "lib";
+
+   type Library_Type_Type is ("relocatable", "static", "static-pic");
+   Library_Type : Library_Type_Type :=
+     external ("BARE_BOARDS_LIBRARY_TYPE", external ("LIBRARY_TYPE", "static"));
+   for Library_Kind use Library_Type;
+
+   package Compiler is
+      for Default_Switches ("Ada") use Bare_Boards_Config.Ada_Compiler_Switches;
+   end Compiler;
+
+   package Binder is
+      for Switches ("Ada") use ("-Es"); --  Symbolic traceback
+   end Binder;
+
+   package Install is
+      for Artifacts (".") use ("share");
+   end Install;
+
+end Bare_Boards;

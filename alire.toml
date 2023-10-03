@@ -1,0 +1,19 @@
+name = "bare_boards"
+description = "Shiny new project"
+version = "0.1.0-dev"
+
+authors = ["Olivier Henley"]
+maintainers = ["Olivier Henley <olivier.henley@gmail.com>"]
+maintainers-logins = ["ohenley"]
+
+[configuration.variables]
+board = { type = "Enum", values = ["stm32f746disco", "stm32f429disco", ], default = "stm32f746disco" }
+
+[[depends-on]]
+bare_types = "0.1.0-dev"
+bare_hal = "0.1.0-dev"
+
+bare_devices = "0.1.0-dev"
+bare_drivers = "0.1.0-dev"
+bare_complex_drivers = "0.1.0-dev"
+bare_touch_panel = "0.1.0-dev"
