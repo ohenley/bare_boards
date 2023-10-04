@@ -138,5 +138,6 @@ package body STM32.Board is
       Configure_IO (User_Button_Point, (Mode_In, Resistors => Floating));
    end Configure_User_Button_GPIO;
 begin
-   Initialize_SDRAM;
+   null;
+   --Initialize_SDRAM;
 end STM32.Board;
