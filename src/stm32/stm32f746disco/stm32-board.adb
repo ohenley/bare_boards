@@ -28,6 +28,7 @@
 --   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.   --
 --                                                                          --
 ------------------------------------------------------------------------------
+with STM32.SDRAM;
 
 package body STM32.Board is
 
@@ -63,6 +64,40 @@ package body STM32.Board is
                      Speed       => Speed_100MHz,
                      Resistors   => Floating));
    end Initialize_LEDs;
+
+   ---------------------------
+   -- Initialize_SDRAM_GPIO --
+   ---------------------------
+
+   procedure Initialize_SDRAM_GPIO is
+   begin
+      Enable_Clock (SDRAM_PINS);
+
+      Configure_IO (SDRAM_Pins,
+                    (Mode           => Mode_AF,
+                     AF             => GPIO_AF_FMC_12,
+                     AF_Speed       => Speed_50MHz,
+                     AF_Output_Type => Push_Pull,
+                     Resistors      => Pull_Up));
+
+      Lock (SDRAM_Pins);
+   end;
+
+   procedure Initialize_SDRAM is
+   begin
+      Initialize_SDRAM_GPIO;
+      STM32.SDRAM.Initialize (STM32.Device.System_Clock_Frequencies.SYSCLK,
+                              SDRAM_Base,
+                              SDRAM_Bank,
+                              SDRAM_CAS_Latency,
+                              SDRAM_Refresh_Cnt,
+                              SDRAM_Min_Delay_In_ns,
+                              SDRAM_Row_Bits,
+                              SDRAM_Mem_Width,
+                              SDRAM_CLOCK_Period,
+                              SDRAM_Read_Burst,
+                              SDRAM_Read_Pipe);
+   end;
 
    -------------------------
    -- Initialize_I2C_GPIO --
@@ -102,5 +137,6 @@ package body STM32.Board is
       Enable_Clock (User_Button_Point);
       Configure_IO (User_Button_Point, (Mode_In, Resistors => Floating));
    end Configure_User_Button_GPIO;
-
+begin
+   Initialize_SDRAM;
 end STM32.Board;
