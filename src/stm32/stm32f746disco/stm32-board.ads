@@ -118,6 +118,8 @@ package STM32.Board is
    SDRAM_Refresh_Cnt     : constant := 1539;
    SDRAM_Min_Delay_In_ns : constant := 60;
 
+   procedure Initialize_SDRAM;
+
    procedure Initialize_SDRAM_GPIO;
 
    ---------
